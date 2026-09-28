@@ -1,0 +1,229 @@
+{
+  "info": {
+    "name": "DermaVet API",
+    "description": "Kolekcija za testiranje DermaVet backend endpoint-a. Postaviti bazneUrl/admin varijable u kolekciji ili u Postman environment-u.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "adminUsername",
+      "value": ""
+    },
+    {
+      "key": "adminPassword",
+      "value": ""
+    },
+    {
+      "key": "appointmentId",
+      "value": "1"
+    },
+    {
+      "key": "veterinarId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Zakazivanje termina",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "appointments"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ime\": \"Marko Marković\",\n  \"telefon\": \"0641234567\",\n  \"email\": \"marko@primer.com\",\n  \"ljubimac\": \"Reks\",\n  \"vrsta\": \"Pas\",\n  \"usluga\": \"Alergo test\",\n  \"veterinarId\": {{veterinarId}},\n  \"datum\": \"2026-09-28\",\n  \"vreme\": \"11:00\",\n  \"napomena\": \"Ljubimac je jako uplašen na pregledima.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Slobodni termini za datum i veterinara",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/slobodni-termini?datum=2026-09-28&veterinarId={{veterinarId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "slobodni-termini"
+              ],
+              "query": [
+                {
+                  "key": "datum",
+                  "value": "2026-09-28"
+                },
+                {
+                  "key": "veterinarId",
+                  "value": "{{veterinarId}}",
+                  "description": "ID veterinara iz GET /api/doctors"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Svi termini (admin)",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "appointments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Promena statusa termina (admin)",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}/status?status=POTVRDJEN",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "{{appointmentId}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "POTVRDJEN",
+                  "description": "Jedno od: NA_CEKANJU, POTVRDJEN, OTKAZAN, ZAVRSEN"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Brisanje termina (admin)",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/{{appointmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                "{{appointmentId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Lista lekara (sa radnim danima i uslugama)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "doctors"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Katalog usluga po kategorijama",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/services",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "services"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DermaVet – Veterinarski dermatološki centar</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p:#9470CC;--pd:#7050AA;--pl:#F0EBFB;--pm:#B09DD8;--dark:#1a1a1a;--dark2:#242424;--muted:#5a5a5a;--bg:#fff;--bg2:#f9f9f9;--border:#e0e0e0;--r:12px;--rs:8px;}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;color:var(--dark);background:var(--bg);line-height:1.65;overflow-x:hidden;font-size:17px}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .55s ease,transform .55s ease}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .55s ease,transform .55s ease}
+.reveal.v,.reveal-l.v,.reveal-r.v{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+@keyframes titleIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+@keyframes sfL{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:none}}
+@keyframes sfR{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:none}}
+@keyframes scIn{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 0 0 rgba(148,112,204,.45)}50%{box-shadow:0 0 0 9px rgba(148,112,204,0)}}
+@keyframes ringBell{0%,100%{transform:rotate(0)}15%{transform:rotate(-18deg)}30%{transform:rotate(16deg)}45%{transform:rotate(-12deg)}60%{transform:rotate(10deg)}75%{transform:rotate(-5deg)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+nav.sc{box-shadow:0 2px 18px rgba(0,0,0,.08)}
+.ni{max-width:1220px;margin:0 auto;display:flex;align-items:center;height:90px;padding:0 1.8rem 0 1.1rem}
+.logo{display:flex;align-items:center;gap:13px;cursor:pointer;flex-shrink:0}
+.logo-circle{width:64px;height:64px;flex-shrink:0;border-radius:50%;overflow:hidden;border:2px solid var(--pl)}
+.logo-circle img{width:100%;height:100%;object-fit:cover}
+.logo-txt .ln{font-size:1.45rem;font-weight:900;letter-spacing:-.5px;line-height:1;text-transform:uppercase}
+.logo-txt .ln .dr,.logo-txt .ln .vt{color:var(--p)}
+.nl{flex:1;display:flex;justify-content:center;align-items:center;gap:1.4rem;font-size:.95rem;font-weight:700;color:var(--muted)}
+.nl a{transition:color .2s;position:relative;padding-bottom:2px;white-space:nowrap}
+.nl a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2.5px;background:var(--p);border-radius:2px;transition:width .22s}
+.nl a:hover{color:var(--p)}.nl a:hover::after{width:100%}
+.na{display:flex;align-items:center;gap:1.2rem;flex-shrink:0}
+.nic-group{display:flex;align-items:center;gap:.5rem}
+.nic{width:42px;height:42px;border:1.5px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;background:#fff;position:relative;color:var(--dark);flex-shrink:0}
+.nic:hover{border-color:var(--p);color:var(--p);background:var(--pl)}
+.nic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nic.ring svg{animation:ringBell .6s ease}
+.ntip{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;font-size:.75rem;padding:4px 10px;border-radius:6px;white-space:nowrap;display:none;z-index:10;pointer-events:none}
+.ntip::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top:none;border-bottom-color:var(--dark)}
+.nav-ncta{background:var(--p);color:#fff;padding:.58rem 1.4rem;border-radius:var(--rs);font-size:1rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:background .2s;white-space:nowrap;animation:ctaPulse 3s ease-in-out infinite}
+.nav-ncta:hover{background:var(--pd);animation-play-state:paused}
+.hbg{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:6px;padding:4px}
+.hbg span{display:block;width:24px;height:2.4px;background:var(--dark);border-radius:2px}
+.mm{display:none;position:fixed;top:90px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:1.5rem 1.8rem;z-index:290;flex-direction:column;gap:1rem;box-shadow:0 6px 20px rgba(0,0,0,.07)}
+.mm a{font-size:1.1rem;font-weight:700;color:var(--dark);padding:.3rem 0;border-bottom:1px solid var(--border)}
+.mm .mm-cta{background:var(--p);color:#fff;text-align:center;padding:.75rem;border-radius:var(--rs);font-weight:700;margin-top:.4rem;border:none;cursor:pointer;font-family:inherit;font-size:1.1rem}
+.mm.open{display:flex}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:6.5rem 1.5rem 2.5rem;position:relative;overflow:hidden;background-color:#1a1228;background-image:url('1.jpg');background-size:cover;background-position:center}
+/* SLIKA-POZADINA-AMBULANTA: zameni background-image:url('') sa url('ambulanta.jpg') */
+.hero-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,5,20,.3) 0%,rgba(10,5,20,.5) 50%,rgba(10,5,20,.82) 100%)}
+
+.hero-bigtitle-wrap{text-align:center;margin-bottom:1.8rem;position:relative;z-index:1;animation:titleIn 1s ease both}
+.hero-bigtitle{display:inline-block;background:rgba(255,255,255,.96);color:var(--dark);font-size:clamp(.95rem,2.2vw,1.6rem);font-weight:900;padding:.75rem 2.8rem;border-radius:60px;box-shadow:0 4px 28px rgba(148,112,204,.2);letter-spacing:.1em;text-transform:uppercase;border:1.5px solid rgba(148,112,204,.2);animation:floatY 4s ease-in-out infinite}
+
+.car-outer{position:relative;width:100%;max-width:1200px;margin:0 auto 1.5rem;z-index:1;animation:scIn .8s ease both .35s}
+.car-track{display:flex;align-items:center;gap:.5rem;overflow:hidden;width:100%}
+.car-item{flex-shrink:0;border-radius:var(--r);overflow:hidden;background:linear-gradient(135deg,#2d1f4a,#1a0e2e);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;transition:all .4s ease}
+.car-item.cc{flex:3.2;height:440px}
+.car-item.cl,.car-item.cr{flex:1;height:300px;opacity:.5;filter:brightness(.75)}
+.car-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.car-nav{position:absolute;top:50%;transform:translateY(-60%);z-index:5;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,.3);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.3rem;color:#fff;transition:all .2s;line-height:1}
+.car-nav:hover{background:var(--p);border-color:var(--p)}
+.cprev{left:-18px}.cnext{right:-18px}
+.car-dots{display:flex;gap:6px;justify-content:center;margin-top:.7rem}
+.cdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:background .3s}
+.cdot.act{background:#fff}
+
+.hero-bottom{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;position:relative;z-index:1;align-items:stretch}
+.hb-left{background:rgba(255,255,255,.13);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:var(--r);padding:1.5rem;border:1px solid rgba(255,255,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:sfL .8s ease both .6s}
+.hb-right{background:rgba(255,255,255,.13);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:var(--r);padding:1.5rem;border:1px solid rgba(255,255,255,.2);display:flex;flex-direction:column;justify-content:center;animation:sfR .8s ease both .6s}
+.hero h1{font-size:clamp(1.1rem,2.2vw,1.8rem);font-weight:800;line-height:1.25;color:#fff;margin-bottom:1.1rem;text-align:center}
+.hero h1 .ac{color:var(--pm)}
+
+.srvrot{width:100%;text-align:center}
+.sri{display:none}.sri.act{display:block;animation:sriFade .45s ease}
+@keyframes sriFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.sri-icon{font-size:1.7rem;margin-bottom:.3rem}
+.sri-name{font-size:1rem;font-weight:800;color:#fff;margin-bottom:.25rem;cursor:pointer;transition:color .2s}
+.sri-name:hover{color:var(--pm)}
+.sri-desc{font-size:.85rem;color:rgba(255,255,255,.78);line-height:1.55}
+.sri-dots{display:flex;gap:6px;margin-top:.85rem;justify-content:center}
+.sridot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:background .3s}
+.sridot.act{background:#fff}
+
+.mir{display:flex;align-items:flex-start;gap:10px;padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.12)}
+.mir:last-child{border-bottom:none}
+.miic{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.miic svg{width:15px;height:15px;stroke:rgba(255,255,255,.9);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mil{font-size:.78rem;color:rgba(255,255,255,.65);font-weight:600;margin-bottom:2px}
+.miv{font-size:1rem;font-weight:700;color:#fff;line-height:1.35}
+.miv small{font-weight:400;color:rgba(255,255,255,.7);font-size:.85rem}
+
+#hero-mob{display:none;margin-top:.8rem}
+.hero-contact-mob{display:none}
+
+/* ── SECTIONS ── */
+section{padding:4.5rem 1.5rem}
+.si{max-width:1200px;margin:0 auto}
+.stag{display:inline-block;font-size:.78rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--p);font-weight:700;margin-bottom:.6rem;background:var(--pl);padding:4px 13px;border-radius:20px}
+.sti{font-size:clamp(1.7rem,3vw,2.3rem);font-weight:800;letter-spacing:-.3px;margin-bottom:.6rem}
+.ssu{color:var(--muted);max-width:580px;font-size:1.02rem;margin-bottom:2.2rem;line-height:1.8}
+
+/* ── USLUGE ── */
+#usluge{background:var(--bg2)}
+.srv-tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:2.2rem}
+.srv-tab{padding:.52rem 1.15rem;border-radius:20px;font-size:.88rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all .2s;font-family:inherit;white-space:nowrap}
+.srv-tab:hover{border-color:var(--p);color:var(--p);transform:translateY(-2px)}
+.srv-tab.active{background:var(--p);color:#fff;border-color:var(--p)}
+.srv-panel{display:none}.srv-panel.active{display:block}
+
+.srv-hero{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;background:#fff;border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:0 3px 18px rgba(0,0,0,.06)}
+.srv-img-wrap{padding:1.5rem 1rem 1.5rem 1.5rem;display:flex;align-items:center;justify-content:center}
+.srv-img{width:100%;height:340px;background:linear-gradient(135deg,#ede8fb,#ddd0f8);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
+.srv-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:var(--rs)}
+
+.srv-ss{position:relative;overflow:hidden}
+.ss-s{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;display:flex;align-items:center;justify-content:center;font-size:4rem}
+.ss-s:first-child{position:relative;height:340px;opacity:0}
+.ss-s.sact{opacity:1;z-index:2}
+.ss-s img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--rs)}
+.ss-nav{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:4}
+.ss-d{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:background .3s}
+.ss-d.sact{background:#fff}
+
+.srv-content{padding:2.2rem 2.2rem 2.2rem 1.8rem;display:flex;flex-direction:column;justify-content:center}
+.srv-content .stag{margin-bottom:.7rem}
+.srv-content h3{font-size:1.5rem;font-weight:800;margin-bottom:.9rem}
+.srv-content p{color:var(--muted);font-size:1rem;line-height:1.85;margin-bottom:.8rem}
+.srv-list{list-style:none;margin-top:.7rem}
+.srv-list li{display:flex;align-items:flex-start;gap:8px;font-size:.95rem;color:var(--muted);margin-bottom:.5rem;line-height:1.55}
+.srv-list li::before{content:'✓';color:var(--p);font-weight:800;flex-shrink:0;margin-top:2px}
+.sub-intro{color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:1.3rem;background:#fff;border-radius:var(--r);padding:1.2rem 1.5rem;border:1px solid var(--border)}
+
+.sub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.95rem;margin-top:1.5rem}
+.sub-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative;transition:box-shadow .25s,transform .25s;cursor:pointer}
+.sub-card:hover{box-shadow:0 8px 28px rgba(148,112,204,.18);transform:translateY(-3px)}
+.sub-front{transition:opacity .3s ease}
+.sub-card:hover .sub-front{opacity:0}
+.sub-img{height:145px;background:linear-gradient(135deg,#ede8fb,#ddd0f8);display:flex;align-items:center;justify-content:center;font-size:2.2rem;position:relative;overflow:hidden}
+.sub-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.sub-info{padding:.9rem}
+.sub-name{font-size:.92rem;font-weight:700;margin-bottom:4px;color:var(--dark)}
+.sub-desc{font-size:.8rem;color:var(--muted);line-height:1.6}
+.sub-back{position:absolute;inset:0;background:linear-gradient(145deg,var(--pd),var(--p));color:#fff;padding:1.1rem;transform:translateY(101%);transition:transform .35s ease;display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
+.sub-card:hover .sub-back{transform:translateY(0)}
+.sub-card.tapped .sub-back{transform:translateY(0)}
+.sub-card.tapped .sub-front{opacity:0}
+.sb-n{font-size:.9rem;font-weight:800;color:#fff;margin-bottom:.5rem}
+.sb-t{font-size:.78rem;line-height:1.65;color:rgba(255,255,255,.9)}
+
+/* ── TIM ── */
+#tim{background:#fff}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem}
+.tc{border-radius:var(--r);overflow:hidden;position:relative;cursor:pointer;box-shadow:0 3px 16px rgba(0,0,0,.06);background:var(--bg2);border:1px solid var(--border);transition:box-shadow .25s}
+.tc:hover{box-shadow:0 8px 30px rgba(148,112,204,.13)}
+.tp{width:100%;height:340px;background:linear-gradient(135deg,#ede8fb,#ddd0f8);display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;overflow:hidden}
+.tp img{width:100%;height:100%;object-fit:cover;object-position:top center;position:absolute;inset:0;transition:transform .45s ease}
+.tc:hover .tp img{transform:scale(1.05)}
+.tc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,8,6,.93) 0%,rgba(15,8,6,.5) 55%,transparent 100%);opacity:0;transition:opacity .3s ease;display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem;color:#fff;z-index:2}
+.tc:hover .tc-overlay,.tc.tapped .tc-overlay{opacity:1}
+.tco-role{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--pm);font-weight:700;margin-bottom:6px}
+.tco-name{font-size:1.05rem;font-weight:800;margin-bottom:.75rem}
+.tco-bio{font-size:.84rem;line-height:1.7;opacity:.9}
+.tco-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:.85rem}
+.tco-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:600}
+.ti2{padding:1.1rem 1.3rem;background:#fff;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem}
+.ti2l .tr{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--p);font-weight:700}
+.ti2l .tn{font-size:.95rem;font-weight:800}
+.tbadge{display:inline-flex;align-items:center;gap:4px;background:var(--pl);color:var(--pd);padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:700}
+.tap-hint{font-size:.72rem;color:var(--muted);display:none}
+
+/* ── CALENDAR ── */
+#kalendar{background:var(--bg2)}
+.gcal-wrap{background:#fff;border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:0 3px 16px rgba(0,0,0,.05)}
+.gcal-hd{background:var(--p);padding:.95rem 1.4rem;display:flex;align-items:center;gap:10px}
+.gcal-hd svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.gcal-hd span{font-size:.95rem;font-weight:700;color:#fff}
+.gcal-hd small{font-size:.78rem;color:rgba(255,255,255,.8);margin-left:auto}
+.gcal-fw iframe{display:block;width:100%;height:580px;border:none}
+
+/* ── MAPA ── */
+#mapa{background:#fff}
+.map-wrap{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);box-shadow:0 3px 16px rgba(0,0,0,.05)}
+.map-wrap iframe{display:block;width:100%;height:420px;border:none}
+
+/* ── ZAKAZIVANJE ── */
+#zakazivanje{background:var(--bg2)}
+.bwrap{display:grid;grid-template-columns:1fr 1.3fr;gap:3.5rem;align-items:start}
+.fcard{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.8rem}
+.fcard h3{font-size:1.1rem;font-weight:700;margin-bottom:1.2rem}
+.notice{background:var(--pl);border-radius:var(--rs);padding:.75rem 1rem;font-size:.88rem;color:var(--pd);margin-bottom:1.2rem;display:flex;gap:8px;align-items:flex-start;border:1px solid rgba(148,112,204,.2)}
+.notice svg{width:15px;height:15px;stroke:var(--p);fill:none;stroke-width:2.5;flex-shrink:0;margin-top:2px}
+.fr2{margin-bottom:.95rem}
+.fr2 label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:5px;font-weight:600}
+.fr2 input,.fr2 select,.fr2 textarea{width:100%;padding:.68rem 1rem;border:1.5px solid var(--border);border-radius:var(--rs);font-size:.98rem;font-family:inherit;color:var(--dark);background:#fff;outline:none;transition:border .2s;-webkit-appearance:none}
+.fr2 input:focus,.fr2 select:focus,.fr2 textarea:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(148,112,204,.08)}
+.fr2 textarea{resize:vertical;min-height:80px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fsub{width:100%;background:var(--p);color:#fff;border:none;padding:.88rem;border-radius:var(--rs);font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;margin-top:.5rem;font-family:inherit}
+.fsub:hover{background:var(--pd);transform:translateY(-1px)}
+.fsub:disabled{opacity:.6;transform:none;cursor:not-allowed}
+.sbox{background:#fff;border:1px solid rgba(148,112,204,.2);border-radius:var(--r);padding:2.2rem;text-align:center;display:none}
+.sic{width:55px;height:55px;background:var(--pl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem}
+.sic svg{width:24px;height:24px;stroke:var(--p);fill:none;stroke-width:2}
+.sbox h4{font-size:1.15rem;font-weight:800;margin-bottom:.5rem}
+.sbox p{font-size:.92rem;color:var(--muted);line-height:1.75}
+.step{display:flex;gap:12px;margin-bottom:1rem;align-items:flex-start}
+.stn{width:30px;height:30px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.stt{font-size:.95rem;color:var(--muted);line-height:1.65}
+.stt strong{color:var(--dark);display:block;font-size:1rem;margin-bottom:2px}
+.ubox{background:var(--pl);border-radius:var(--r);padding:1.1rem 1.4rem;border-left:3px solid var(--p);margin-top:1.5rem}
+.ubox .uh{font-size:.78rem;font-weight:800;color:var(--p);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.ubox p{font-size:.95rem}
+
+/* ── FOOTER ── */
+footer{background:var(--dark2);color:#fff;padding:3.5rem 1.5rem 2rem}
+.fi{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.fb .fn{font-size:1.1rem;font-weight:800;margin-bottom:.5rem}
+.fb .fn span{color:var(--pm)}
+.fd{font-size:.86rem;opacity:.6;line-height:1.8;margin-bottom:1rem}
+.fso{display:flex;gap:9px}
+.fsb{width:34px;height:34px;border:1px solid rgba(255,255,255,.14);border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.78rem;color:rgba(255,255,255,.6)}
+.fsb:hover{border-color:var(--pm);color:var(--pm);transform:translateY(-2px)}
+.fc h4{font-size:.74rem;font-weight:700;opacity:.38;text-transform:uppercase;letter-spacing:1px;margin-bottom:.9rem}
+.fc a,.fc p{display:block;font-size:.86rem;opacity:.65;margin-bottom:.45rem;transition:opacity .2s}
+.fc a:hover{opacity:1;color:var(--pm)}
+.fbot{max-width:1200px;margin:0 auto;border-top:1px solid rgba(255,255,255,.07);padding-top:1.1rem;font-size:.76rem;opacity:.38;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .nl{display:none}
+  .nav-ncta{display:none}
+  .hbg{display:flex}
+  .ni{height:76px;padding:0 1.1rem;justify-content:space-between}
+  .na{gap:.6rem}
+  .mm{top:76px}
+  .hero{padding:5rem 1.1rem 2rem}
+  .hb-left{display:none}
+  #hero-mob{display:grid;grid-template-columns:1fr}
+  #hero-mob .hb-left{display:flex}
+  .hero-contact-mob{display:block;background:rgba(255,255,255,.13);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:var(--r);padding:.3rem 1.2rem;border:1px solid rgba(255,255,255,.2);margin-bottom:1.2rem;animation:sfL .8s ease both .6s}
+  .car-item.cl,.car-item.cr{display:none}
+  .car-item.cc{flex:1;height:320px}
+  .srv-hero{grid-template-columns:1fr}
+  .srv-img-wrap{padding:1.2rem 1.2rem .5rem}.srv-img,.srv-ss,.ss-s:first-child{height:220px}
+  .srv-content{padding:1.2rem 1.4rem 1.5rem}
+  .bwrap{grid-template-columns:1fr;gap:1.8rem}.fg2{grid-template-columns:1fr}
+  .fi{grid-template-columns:1fr 1fr}.tap-hint{display:block}
+  .sub-grid{grid-template-columns:1fr 1fr}
+  .gcal-fw iframe{height:420px}
+  .map-wrap iframe{height:320px}
+}
+@media(max-width:600px){
+  section{padding:3rem 1.1rem}
+  .fi{grid-template-columns:1fr}
+  .sub-grid{grid-template-columns:1fr 1fr}
+  .srv-tabs{gap:.3rem}.srv-tab{font-size:.78rem;padding:.4rem .85rem}
+  .team-grid{grid-template-columns:1fr}
+  .hero-bigtitle{font-size:.88rem;padding:.6rem 1.3rem}
+  .hero h1{font-size:1.15rem}
+  .hero-bottom{gap:.7rem}
+  .hero-contact-mob{margin-bottom:.7rem}
+  .car-item.cc{height:250px}
+  .gcal-fw iframe{height:340px}
+  .ni{height:66px}
+  .mm{top:66px}
+  .logo-circle{width:50px;height:50px}
+  .logo-txt .ln{font-size:1.2rem}
+  .nic{width:38px;height:38px}
+  .nic svg{width:16px;height:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mn">
+  <div class="ni">
+    <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <div class="logo-circle"><img src="logo2.jpeg" alt="DermaVet logo"></div>
+      <div class="logo-txt"><div class="ln"><span class="dr">DERMA</span><span class="vt">VET</span></div></div>
+    </div>
+    <div class="nl">
+      <a href="#usluge">Usluge</a>
+      <a href="#tim">Naš tim</a>
+      <a href="#zakazivanje">Zakazivanje</a>
+      <a href="#mapa">Pronađite nas</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <div class="na">
+      <button class="nav-ncta" onclick="goto('#zakazivanje')">Zakažite termin</button>
+      <div class="nic-group">
+        <div class="nic" id="phone-nic" onclick="handlePhone()" title="Pozovite nas">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <div class="ntip" id="ptip">Kopiran!</div>
+        </div>
+        <a class="nic" href="https://www.instagram.com/dermavet.bg/" target="_blank" title="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a class="nic" href="https://www.facebook.com/DermaVetBgd/" target="_blank" title="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+      </div>
+      <button class="hbg" onclick="toggleMM()" aria-label="Meni"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="mm" id="mm">
+  <a href="#usluge" onclick="closeMM()">Usluge</a>
+  <a href="#tim" onclick="closeMM()">Naš tim</a>
+  <a href="#zakazivanje" onclick="closeMM()">Zakazivanje</a>
+  <a href="#mapa" onclick="closeMM()">Pronađite nas</a>
+  <a href="#kontakt" onclick="closeMM()">Kontakt</a>
+  <button class="mm-cta" onclick="closeMM();goto('#zakazivanje')">Zakažite termin</button>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="poc">
+  <div class="hero-ov"></div>
+  <div class="hero-bigtitle-wrap"><div class="hero-bigtitle">Veterinarski Dermatološki Centar</div></div>
+  <div class="car-outer">
+    <button class="car-nav cprev" onclick="carMove(-1)">‹</button>
+    <div class="car-track" id="carTrack"></div>
+    <button class="car-nav cnext" onclick="carMove(1)">›</button>
+    <div class="car-dots" id="carDots"></div>
+  </div>
+  <!-- MOBILE: kontakt info kartica odmah ispod karusela -->
+  <div class="hero-contact-mob">
+    <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="mil">Adresa</div><div class="miv">Vranjska 2<small>, Zvezdara, Beograd</small></div></div></div>
+    <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div class="mil">Telefon</div><div class="miv">+381 64 485 07 98</div></div></div>
+    <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="mil">Radno vreme</div><div class="miv">Pon–Pet 11–18h<small> | Sub 10–13h</small></div></div></div>
+    <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="mil">Email</div><div class="miv" style="font-size:.88rem">dermavetbg@gmail.com</div></div></div>
+  </div>
+  <!-- DESKTOP: left h1+rotating | right info -->
+  <div class="hero-bottom">
+    <div class="hb-left">
+      <h1>Zdravlje vašeg <span class="ac">ljubimca</span> je naša misija</h1>
+      <div class="srvrot" id="srvRot-desk"></div>
+    </div>
+    <div class="hb-right">
+      <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="mil">Adresa</div><div class="miv">Vranjska 2<small>, Zvezdara, Beograd</small></div></div></div>
+      <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div class="mil">Telefon</div><div class="miv">+381 64 485 07 98</div></div></div>
+      <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="mil">Radno vreme</div><div class="miv">Pon–Pet 11–18h<small> | Sub 10–13h</small></div></div></div>
+      <div class="mir"><div class="miic"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="mil">Email</div><div class="miv" style="font-size:.88rem">dermavetbg@gmail.com</div></div></div>
+    </div>
+  </div>
+  <!-- MOBILE: h1 left | rotating right -->
+  <div class="hero-bottom" id="hero-mob">
+    <div class="hb-left"><h1>Zdravlje vašeg <span class="ac">ljubimca</span> je naša misija</h1></div>
+    <div class="hb-left" style="animation:sfR .8s ease both .6s"><div class="srvrot" id="srvRot-mob"></div></div>
+  </div>
+</section>
+
+<!-- USLUGE -->
+<section id="usluge">
+  <div class="si">
+    <div class="stag reveal">Šta nudimo</div>
+    <h2 class="sti reveal d1">Naše usluge</h2>
+    <p class="ssu reveal d2">Kompletna veterinarska nega – od dermatologije i preventive do napredne endoskopske dijagnostike i hirurgije.</p>
+    <div class="srv-tabs reveal d2">
+      <button class="srv-tab active" onclick="showSrv('derm',this)">Dermatologija</button>
+      <button class="srv-tab" onclick="showSrv('hirurg',this)">Min. invazivna hirurgija</button>
+      <button class="srv-tab" onclick="showSrv('endo',this)">Endoskopija</button>
+      <button class="srv-tab" onclick="showSrv('interna',this)">Interna medicina</button>
+      <button class="srv-tab" onclick="showSrv('stoma',this)">Stomatologija</button>
+      <button class="srv-tab" onclick="showSrv('lab',this)">Laboratorija</button>
+      <button class="srv-tab" onclick="showSrv('prev',this)">Preventiva</button>
+    </div>
+
+    <!-- DERMATOLOGIJA -->
+    <div class="srv-panel active" id="srv-derm">
+      <div class="sub-intro">Jedina specijalizovana veterinarska dermatološka ambulanta u regionu. Spec. dr vet. Jovana Ranisavljević je ekspert za alergije, bolesti kože i imunoterapiju.</div>
+      <div class="sub-grid">
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🧬<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Alergo test</div><div class="sub-desc">Intradermalni i iz krvi – jedina metoda koja otkriva uzrok alergija.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Alergo test</div><div class="sb-t">Intradermalni alergotest ubrizgavanjem mikro-količina alergena u kožu otkriva tačne okidače – poleni, grinje, buva pljuvačka. Alergotest iz krvi (serum IgE) je neinvazivna alternativa. Na osnovu rezultata kreiramo individualizovanu imunoterapiju – jedini trajni tretman alergija.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🔬<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Dermatološki pregled</div><div class="sub-desc">Kompletan pregled kože i dlake korišćenjem dermatoskopa i Wood lampe.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Dermatološki pregled</div><div class="sb-t">Kompletan pregled kože pomoću dermatoskopa, lupe i Wood lampe. Procenjujemo dlaku, nokte, kožne nabore. Tražimo parazite (Demodex, Sarcoptes), procenjujemo vrstu infekcije (bakterijska, gljivična, alergijska) i određujemo optimalnu terapiju.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🧫<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Citologija</div><div class="sub-desc">Brza mikroskopska dijagnostika promena na koži za 15–20 minuta.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Citologija</div><div class="sb-t">Celofanskim brisom, skarifikatom ili aspiracijom ćelija dobijamo materijal za mikroskopsku analizu. Za 15–20 minuta saznajemo da li su prisutne bakterije, kvasci, inflamatorne ćelije ili maligni elementi – što odmah usmerava terapiju.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🔦<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Wood lampa</div><div class="sub-desc">UV dijagnostika gljivičnih infekcija – brza i neinvazivna metoda.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Wood lampa</div><div class="sb-t">Dermatofite apsorbuju UV svetlost i fluorescentno sijaju zeleno-žutom bojom. Pregled traje 2–3 minuta. Koristimo je i za detekciju određenih bakterija. Bezbolna i potpuno bezopasna metoda za pacijenta.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">👂<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Video-otoskopija</div><div class="sub-desc">HD pregled ušnog kanala uz uvećanje od 20–40x za preciznu dijagnostiku.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Video-otoskopija</div><div class="sb-t">Video-otoskop sa HD kamerom prikazuje ušni kanal uveličan 20–40x na monitoru. Vidimo lokalizaciju i prirodu promene – upala, gljive, polipi, strana tela. Terapija se izvodi istim aparatom pod direktnom vizuelnom kontrolom.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">⚡<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Laser u dermatologiji</div><div class="sub-desc">Medicinski diodni laser za terapiju hroničnih kožnih oboljenja i otitisa.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Laser u dermatologiji</div><div class="sb-t">Medicinski diodni laser deluje precizno na inflamatorna tkiva smanjujući bol, edem i ubrzavajući zarastanje. Koristimo ga u terapiji hroničnog otitisa, dermatitisa i interdigitalnih cista. Vidljivi rezultati već posle 2–3 tretmana, bez hemikalija.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">💇<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Trihogram</div><div class="sub-desc">Mikroskopska analiza dlake za dijagnostiku endokrinih poremećaja.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Trihogram</div><div class="sb-t">Analiziramo 20–30 dlaka pod mikroskopom – određujemo fazu rasta (anagen/telogen), strukturu dlake i prisustvo parazita. Patološki trihogram ukazuje na endokrini disbalans, genetsku atrofiju folikula ili imunoposredovane dermatoze.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🩺<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">FNA metoda</div><div class="sub-desc">Fine needle aspiration tumora i limfnih čvorova za citološku analizu.</div></div></div>
+          <div class="sub-back"><div class="sb-n">FNA metoda</div><div class="sb-t">Tankom iglom aspiriramo ćelije iz tumora, uvećanih limfnih čvorova ili cistične promene. Citološka analiza za 15 minuta određuje da li je promena benigna, upalna ili maligna – što direktno određuje hitnost hirurške intervencije.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HIRURGIJA – multi-image slideshow -->
+    <div class="srv-panel" id="srv-hirurg">
+      <div class="srv-hero">
+        <div class="srv-img-wrap">
+          <div class="srv-img srv-ss" id="ss-hirurg">
+            <div class="ss-s sact">⚕️<!-- SLIKA-HIRURG-1 --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-s">🔪<!-- SLIKA-HIRURG-2 --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-s">💉<!-- SLIKA-HIRURG-3 --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-nav"><div class="ss-d sact" onclick="ssDot('hirurg',0)"></div><div class="ss-d" onclick="ssDot('hirurg',1)"></div><div class="ss-d" onclick="ssDot('hirurg',2)"></div></div>
+          </div>
+        </div>
+        <div class="srv-content">
+          <div class="stag">Hirurgija</div><h3>Minimalno invazivna hirurgija</h3>
+          <p>Laparoskopske procedure – hirurški zahvati kroz minimalne rezove, brži oporavak i manji postoperativni bol u poređenju sa klasičnom hirurgijom.</p>
+          <p>Fokus na laparoskopskoj sterilizaciji kuja i mačaka – zlatni standard savremene veterinarske hirurgije.</p>
+          <ul class="srv-list"><li>Laparoskopska sterilizacija kuja i mačaka</li><li>Klasična sterilizacija i kastracija mužjaka</li><li>Opšta hirurgija mekih tkiva</li><li>Savremena anestezija i intraoperativni monitoring</li><li>Postoperativna nega i praćenje oporavka</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENDOSKOPIJA -->
+    <div class="srv-panel" id="srv-endo">
+      <div class="sub-intro">Kompletna endoskopska oprema za minimalno invazivnu dijagnostiku bez operativnih rezova. Svi pregledi se rade pod anestezijom, u potpunoj bezbednosti pacijenta.</div>
+      <div class="sub-grid">
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">👂<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Video-otoskopija</div><div class="sub-desc">Pregled ušnog kanala uz HD uvećanje – dijagnostika i tretman infekcija.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Video-otoskopija</div><div class="sb-t">Pomoću video-otoskopa sa HD kamerom pregledamo ušni kanal uveličan 20–40x. Terapeutske procedure (ispiranje, aplikacija lekova, biopsija) vrše se istim aparatom pod direktnom vizuelnom kontrolom – bez slepe aplikacije.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🔭<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Gastroskopija</div><div class="sub-desc">Pregled jednjaka i želuca bez hirurgije – biopsija i vađenje stranih tela.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Gastroskopija</div><div class="sb-t">Fleksibilnim videoendoskopom pregledamo jednjak, želudac i gornji duodenum. Dijagnostikujemo gastritis, ulkuse, neoplazme. Uzimamo biopsije za histopatologiju. Strana tela se vade istim aparatom – bez hirurškog reza.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🫁<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Bronhoskopija</div><div class="sub-desc">Pregled disajnih puteva, uzimanje BAL uzoraka, dijagnostika traheje.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Bronhoskopija</div><div class="sb-t">Pregledamo larinks, traheju i bronhije. Uzimamo BAL (bronhoalveolarna lavaža) za citologiju i kulturu. Dijagnostikujemo trahealni kolaps, hronični bronhitis, tumore i strana tela. Rade se terapeutske procedure uklanjanja sekreta.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">👃<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Rinoskopija</div><div class="sub-desc">Pregled nosnih šupljina – polipi, tumori, strana tela, dentalne fistule.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Rinoskopija</div><div class="sb-t">Pregledamo nosne hodnike, etmoidnu regiju i nazofarinks. Utvrđujemo uzrok hroničnog curenja i epistakse: polipe, tumore, aspergilozu, strana tela, dentalne fistule. Uzimamo biopsije i vršimo minimalno invazivne terapeutske procedure.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🔍<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Kolonoskopija</div><div class="sub-desc">Pregled debelog creva – kolitisi, polipi, biopsija na više nivoa.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Kolonoskopija</div><div class="sb-t">Fleksibilnim kolonoskopom pregledamo debelo crevo i ileocekalnu regiju. Dijagnostikujemo upalne bolesti creva, polipe i vaskularne lezije. Uzimamo biopsije na više nivoa za preciznu histopatološku analizu uzroka hroničnog proliva.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERNA – multi-image slideshow -->
+    <div class="srv-panel" id="srv-interna">
+      <div class="srv-hero">
+        <div class="srv-img-wrap">
+          <div class="srv-img srv-ss" id="ss-interna">
+            <div class="ss-s sact">🫀<!-- SLIKA-INTERNA-1 --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-s">📡<!-- SLIKA-INTERNA-2 ultrazvuk --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-s">🩺<!-- SLIKA-INTERNA-3 pregled --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-nav"><div class="ss-d sact" onclick="ssDot('interna',0)"></div><div class="ss-d" onclick="ssDot('interna',1)"></div><div class="ss-d" onclick="ssDot('interna',2)"></div></div>
+          </div>
+        </div>
+        <div class="srv-content">
+          <div class="stag">Interna medicina</div><h3>Opšti klinički pregled</h3>
+          <p>Sveobuhvatan pregled zdravstvenog stanja – auskultacija, palpacija, analiza simptoma i postavljanje dijagnoze uz savremenu opremu.</p>
+          <p>Ultrazvučna dijagnostika je sastavni deo internističke obrade i omogućava uvid u stanje unutrašnjih organa bez invazivnih procedura.</p>
+          <ul class="srv-list"><li>Kompletan klinički pregled i anamneza</li><li>Gastroenterologija – creva, pankreas, jetra</li><li>Urologija – bubrezi, bešika, prostata</li><li>Endokrinologija – dijabetes, Cushingov sindrom</li><li>Ultrazvučna dijagnostika unutrašnjih organa</li><li>Ehokardiografija – srce i krvni sudovi</li><li>Terapija trovanja i intenzivna nega</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STOMATOLOGIJA – multi-image slideshow -->
+    <div class="srv-panel" id="srv-stoma">
+      <div class="srv-hero">
+        <div class="srv-img-wrap">
+          <div class="srv-img srv-ss" id="ss-stoma">
+            <div class="ss-s sact">🦷<!-- SLIKA-STOMA-1 --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-s">✨<!-- SLIKA-STOMA-2 čišćenje --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-s">🔬<!-- SLIKA-STOMA-3 pregled --><img src="" alt="" onerror="this.style.display='none'"/></div>
+            <div class="ss-nav"><div class="ss-d sact" onclick="ssDot('stoma',0)"></div><div class="ss-d" onclick="ssDot('stoma',1)"></div><div class="ss-d" onclick="ssDot('stoma',2)"></div></div>
+          </div>
+        </div>
+        <div class="srv-content">
+          <div class="stag">Stomatologija</div><h3>Stomatološka nega</h3>
+          <p>Zdravlje zuba direktno utiče na opšte zdravlje ljubimca. Nudimo kompletnu stomatološku negu uz ultrazvučno čišćenje kamenca i laserski tretman.</p>
+          <ul class="srv-list"><li>Ultrazvučno uklanjanje kamenca</li><li>Poliranje zuba i fluoridizacija</li><li>Ekstrakcija zuba u opštoj anesteziji</li><li>Terapija stomatitisa i gingivitisa</li><li>Oralna hirurgija – uklanjanje tumora i cista</li><li>Kompletan pregled usne duplje</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- LABORATORIJA -->
+    <div class="srv-panel" id="srv-lab">
+      <div class="sub-intro">Kompletna in-house laboratorija – rezultati za 30–60 minuta, precizna dijagnostika na licu mesta.</div>
+      <div class="sub-grid">
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🩸<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Hematologija</div><div class="sub-desc">5-diff analizator – kompletna krvna slika za 3 minute.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Hematologija</div><div class="sb-t">Automatski 5-diff analizator broji i diferentuje sve krvne ćelije: eritrocite (RBC, Hgb, Hct, MCV, MCH), leukocite sa diferencijalom (neutrofili, limfociti, monociti, eozinofili, bazofili) i trombocite. Ključno za dijagnostiku anemija, infekcija i leukoza.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🧪<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Biohemija krvi</div><div class="sub-desc">20+ parametara – jetra, bubrezi, pankreas, elektroliti.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Biohemija krvi</div><div class="sb-t">Analizator simultano meri: enzime jetre (ALT, AST, ALP), funkciju bubrega (urea, kreatinin), pankreas (lipaza, amilaza), proteine, elektrolite, glukozu i holesterol. Kompletan uvid u stanje unutrašnjih organa za 20 minuta.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">💧<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Analiza urina</div><div class="sub-desc">Sediment i biohemija – dijagnostika bubrežnih i urinarnih oboljenja.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Analiza urina</div><div class="sb-t">Fizičkim, hemijskim i mikroskopskim pregledom detektujemo: glukozu, proteine, bilirubin, pH, sediment (eritrociti, leukociti, cilindri, kristali, bakterije). Dijagnostikujemo cistitis, nefritis, dijabetes, urolitijazu i hepatopatije.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🔬<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Koprologija</div><div class="sub-desc">Pregled stolice na parazite – Toxocara, Giardia, Cryptosporidium.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Koprologija</div><div class="sb-t">Flotacijom, nativnom i Lugol metodom pronalazimo jaja i larvne forme: Toxocara, Ancylostoma, Trichuris, Giardia, Cryptosporidium, Isospora. Određujemo intenzitet invazije i biramo odgovarajući antiparazitik.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">⚡<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Antigenski testovi</div><div class="sub-desc">Brzi testovi: parvo, distemper, FIV, FeLV, giardija – 10 minuta.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Antigenski testovi</div><div class="sb-t">Rapid ELISA testovi iz kapljice krvi: Parvo (CPV2), Distemper, FIV/FeLV, Giardia, Ehrlichija, Bordetella, Dirofilarija. Rezultat za 10 minuta. Visoka senzitivnost i specifičnost – pouzdani i u urgentnim situacijama.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVENTIVA -->
+    <div class="srv-panel" id="srv-prev">
+      <div class="sub-intro">Preventivna medicina je temelj dugog i zdravog života vašeg ljubimca. Stručno savetovanje i kompletna zaštita od bolesti.</div>
+      <div class="sub-grid">
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">💬<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Savetovanje vlasnika</div><div class="sub-desc">Individualni plan ishrane, nege i prevencije bolesti.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Savetovanje vlasnika</div><div class="sb-t">Kreiramo individualni program ishrane i nege prilagođen rasi, starosti i zdravstvenom statusu. Edukujemo o znacima bolesti, pravilnoj primeni lekova, učestalosti antiparazitnih tretmana i vakcinacionim protokolima.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">🪱<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Dehelmintizacija</div><div class="sub-desc">Zaštita od buva, krpelja, grinja, glista – ESCCAP protokol.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Dehelmintizacija</div><div class="sb-t">Na osnovu životnog stila i rizika kreiramo individualni plan antiparazitne zaštite: oralni anthelmintici, spot-on ili ogrlice za spoljašnje parazite. Vodeći se ESCCAP smernicama, optimizujemo zaštitu uz minimalno opterećenje organizma.</div></div>
+        </div>
+        <div class="sub-card" onclick="tapCard(this)">
+          <div class="sub-front"><div class="sub-img">💉<img src="" alt="" onerror="this.style.display='none'"/></div><div class="sub-info"><div class="sub-name">Vakcinacija</div><div class="sub-desc">WSAVA protokoli – besnilo, parvo, distemper, FPV, pasoši.</div></div></div>
+          <div class="sub-back"><div class="sb-n">Vakcinacija</div><div class="sb-t">Vakcinišemo prema WSAVA i nacionalnim protokolima. Core vakcine (besnilo, Parvo, Distemper, Hepatitis) obavezne su za sve. Non-core vakcine (Leishmania, Leptospira, FeLV) preporučujemo na osnovu procenjenog rizika. Izdajemo pasoše i sertifikate za putovanje.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIM -->
+<section id="tim">
+  <div class="si">
+    <div class="stag reveal">Upoznajte nas</div>
+    <h2 class="sti reveal d1">Naš tim</h2>
+    <p class="ssu reveal d2">Iskusni stručnjaci posvećeni zdravlju vaših ljubimaca. <span class="tap-hint" style="color:var(--p);font-weight:600">Tapnite karticu za detalje.</span></p>
+    <!-- Kartice lekara se ucitavaju iz baze (GET /api/doctors) - videti loadDoctors() na dnu stranice -->
+    <div class="team-grid" id="team-grid"></div>
+  </div>
+</section>
+
+<!-- TERMINI -->
+<section id="kalendar">
+  <div class="si">
+    <div class="stag reveal">Dostupnost</div>
+    <h2 class="sti reveal d1">Slobodni termini</h2>
+    <p class="ssu reveal d2">Pogledajte naš kalendar uživo. Termini se ažuriraju automatski.</p>
+    <div class="gcal-wrap reveal d2">
+      <div class="gcal-hd"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>DermaVet – Kalendar termina</span><small>Live · Pon–Pet 11–18h · Sub 10–13h</small></div>
+      <div class="gcal-fw"><iframe id="gcal-iframe" src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Europe%2FBelgrade&showPrint=0&showTitle=0&showTabs=0&showCalendars=0&showTz=0&src=ZGVybWF2ZXRiZ0BnbWFpbC5jb20&color=%239470CC" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>
+    </div>
+  </div>
+</section>
+
+<!-- ZAKAZIVANJE -->
+<section id="zakazivanje">
+  <div class="si">
+    <div class="stag reveal">Online rezervacija</div>
+    <h2 class="sti reveal d1">Zakažite termin</h2>
+    <p class="ssu reveal d2">Popunite formu i termin se automatski dodaje u naš kalendar.</p>
+    <div class="bwrap">
+      <div class="reveal-l d2">
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:.9rem">Kako funkcioniše?</h3>
+        <p style="color:var(--muted);margin-bottom:1.3rem;font-size:1rem;line-height:1.8">Zakazivanje je jednostavno – termin se odmah šalje u kalendar ambulante.</p>
+        <div style="margin-bottom:1.5rem">
+          <div class="step"><div class="stn">1</div><div class="stt"><strong>Popunite formu</strong>Unesite podatke o sebi i ljubimcu, izaberite uslugu i datum.</div></div>
+          <div class="step"><div class="stn">2</div><div class="stt"><strong>Termin u kalendaru</strong>Vaša rezervacija odmah dolazi u Google Calendar ambulante.</div></div>
+          <div class="step"><div class="stn">3</div><div class="stt"><strong>Dođite na pregled</strong>Dan pre termina možete nas kontaktirati za potvrdu.</div></div>
+        </div>
+        <div class="ubox"><div class="uh">Hitni slučajevi</div><p>Pozovite odmah na <strong>+381 64 485 07 98</strong></p></div>
+      </div>
+      <div class="fcard reveal-r d2">
+        <div style="background:var(--pl);border:1.5px solid var(--p);border-radius:var(--rs);padding:.9rem 1rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:10px"><span style="font-size:1.3rem">🚨</span><div><div style="font-size:.86rem;font-weight:800;color:var(--pd)">Hitni slučajevi — nemojte čekati!</div><div style="font-size:.82rem">Pozovite odmah: <a href="tel:+381644850798" style="font-weight:700;color:var(--p)">+381 64 485 07 98</a></div></div></div>
+        <h3>Forma za zakazivanje</h3>
+        <div class="notice"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Zahtev se šalje direktno u kalendar ambulante.</div>
+        <div id="bf">
+          <div class="fg2"><div class="fr2"><label>Ime i prezime *</label><input type="text" id="fn" placeholder="Marko Marković"/></div><div class="fr2"><label>Telefon *</label><input type="tel" id="fp" placeholder="+381 6x..."/></div></div>
+          <div class="fr2"><label>Email adresa *</label><input type="email" id="fe" placeholder="email@primer.com"/></div>
+          <div class="fg2"><div class="fr2"><label>Ime ljubimca *</label><input type="text" id="fpt" placeholder="Maks"/></div><div class="fr2"><label>Vrsta ljubimca</label><select id="fsp"><option value="">Izaberite...</option><option>Pas</option><option>Mačka</option><option>Zec</option><option>Glodari</option><option>Ptica</option><option>Ostalo</option></select></div></div>
+          <div class="fr2"><label>Veterinar *</label>
+            <select id="fvet" onchange="onVeterinarChange()"><option value="">Učitavanje veterinara...</option></select>
+          </div>
+          <div class="fr2"><label>Usluga *</label>
+            <select id="fsv" onchange="prikaziOpisUsluge()"><option value="">Prvo izaberite veterinara...</option></select>
+            <div id="fsv-opis" style="font-size:.78rem;margin-top:5px;color:var(--muted)"></div>
+          </div>
+          <div class="fg2"><div class="fr2"><label>Željeni datum *</label><input type="date" id="fd"/></div><div class="fr2"><label>Željeno vreme *</label><select id="ft" onchange="validateTime()"><option value="">Izaberite vreme...</option></select><div id="ft-msg" style="font-size:.78rem;margin-top:5px;display:none"></div></div></div>
+          <div class="fr2"><label>Napomena</label><textarea id="fno" placeholder="Opišite simptome ili napomenite nešto važno..."></textarea></div>
+          <button class="fsub" id="fsub-btn" onclick="submitF()">Pošalji zahtev za termin →</button>
+        </div>
+        <div class="sbox" id="sb"><div class="sic"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h4>Zahtev je uspešno poslat!</h4><p>Termin je dodat u kalendar ambulante.<br>Vidimo se uskoro u DermaVet! 🐾</p><button style="margin-top:1.1rem;border:2px solid var(--p);color:var(--p);background:none;padding:.65rem 1.5rem;border-radius:var(--rs);font-weight:700;cursor:pointer;font-family:inherit;font-size:.95rem" onclick="resetF()">Zakaži novi termin</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAPA -->
+<section id="mapa">
+  <div class="si">
+    <div class="stag reveal">Kako do nas</div>
+    <h2 class="sti reveal d1">Pronađite nas</h2>
+    <p class="ssu reveal d2">Vranjska 2, Zvezdara, Beograd – lako dostupna lokacija.</p>
+    <div class="map-wrap reveal d2"><iframe src="https://maps.google.com/maps?q=Vranjska+2,+Zvezdara,+Beograd&t=&z=16&ie=UTF8&iwloc=&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+  </div>
+</section>
+
+<footer id="kontakt">
+  <div class="fi">
+    <div class="fb reveal-l"><div class="fn"><span>Derma</span>Vet</div><p class="fd">Veterinarski dermatološki centar. Prva specijalizovana dermatološka ambulanta u Beogradu.</p><div class="fso"><a class="fsb" href="https://www.instagram.com/dermavet.bg/" target="_blank">IG</a><a class="fsb" href="https://www.facebook.com/DermaVetBgd/" target="_blank">FB</a></div></div>
+    <div class="fc reveal d1"><h4>Kontakt</h4><p>Vranjska 2, Beograd</p><a href="tel:+381644850798">+381 64 485 07 98</a><a href="mailto:dermavetbg@gmail.com">dermavetbg@gmail.com</a></div>
+    <div class="fc reveal d2"><h4>Radno vreme</h4><p>Pon–Pet: 11:00–18:00</p><p>Subota: 10:00–13:00</p><p style="opacity:.35">Nedeljom: zatvoreno</p></div>
+    <div class="fc reveal-r d3"><h4>Navigacija</h4><a href="#usluge">Usluge</a><a href="#tim">Naš tim</a><a href="#kalendar">Termini</a><a href="#zakazivanje">Zakazivanje</a><a href="#mapa">Pronađite nas</a></div>
+  </div>
+  <div class="fbot"><span>© 2025 DermaVet – Veterinarski dermatološki centar</span><span>Vranjska 2, Beograd</span></div>
+</footer>
+
+<script>
+// NAV
+window.addEventListener('scroll',()=>document.getElementById('mn').classList.toggle('sc',scrollY>20));
+function goto(s){document.querySelector(s).scrollIntoView({behavior:'smooth'})}
+function toggleMM(){document.getElementById('mm').classList.toggle('open')}
+function closeMM(){document.getElementById('mm').classList.remove('open')}
+document.addEventListener('click',e=>{
+  const mm=document.getElementById('mm');
+  if(mm.classList.contains('open')&&!mm.contains(e.target)&&!e.target.closest('.hbg'))mm.classList.remove('open');
+});
+
+// PHONE
+function handlePhone(){
+  if(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){window.location.href='tel:+381644850798';}
+  else{navigator.clipboard.writeText('+381 64 485 07 98').catch(()=>{});const t=document.getElementById('ptip');t.style.display='block';setTimeout(()=>t.style.display='none',2000);}
+}
+// Periodic "ring" animation on phone icon to draw attention
+setInterval(()=>{
+  const ph=document.getElementById('phone-nic');
+  if(ph){ph.classList.add('ring');setTimeout(()=>ph.classList.remove('ring'),650);}
+},6000);
+
+// MOBILE HERO LAYOUT
+function setupHero(){
+  const mob=window.innerWidth<=1000;
+  const dl=document.querySelector('.hero-bottom:not(#hero-mob)');
+  const ml=document.getElementById('hero-mob');
+  if(dl)dl.style.display=mob?'none':'grid';
+  if(ml)ml.style.display=mob?'grid':'none';
+}
+setupHero();window.addEventListener('resize',setupHero);
+
+// ROTATING SERVICES
+const srvData=[
+  {icon:'🔬',name:'Dermatološki pregledi',desc:'Dijagnostika bolesti kože, dlake i noktiju',tab:'derm',tabIdx:0},
+  {icon:'🧬',name:'Intradermalni alergo test',desc:'Otkrivamo uzrok alergija, ne samo simptome',tab:'derm',tabIdx:0},
+  {icon:'⚡',name:'Laserski tretmani',desc:'Savremena laserska terapija kožnih oboljenja',tab:'derm',tabIdx:0},
+  {icon:'⚕️',name:'Min. invazivna hirurgija',desc:'Laparoskopija – brži oporavak, manji rezovi',tab:'hirurg',tabIdx:1},
+  {icon:'👂',name:'Video-otoskopija',desc:'Pregled i tretman bolesti uha',tab:'endo',tabIdx:2},
+];
+let si=0;
+function buildSrv(el){
+  if(!el)return;
+  el.innerHTML=srvData.map((sv,i)=>`<div class="sri${i===si?' act':''}">`+
+    `<div class="sri-icon">${sv.icon}</div>`+
+    `<div class="sri-name" onclick="clickSrv(${i})">${sv.name}</div>`+
+    `<div class="sri-desc">${sv.desc}</div>`+
+    `</div>`).join('')+
+    `<div class="sri-dots">${srvData.map((_,i)=>`<div class="sridot${i===si?' act':''}" onclick="jumpSrv(${i})"></div>`).join('')}</div>`;
+}
+function renderSrv(){buildSrv(document.getElementById('srvRot-desk'));buildSrv(document.getElementById('srvRot-mob'));}
+function jumpSrv(i){si=i;renderSrv();}
+function clickSrv(i){
+  const d=srvData[i];
+  goto('#usluge');
+  setTimeout(()=>{
+    document.querySelectorAll('.srv-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.srv-tab').forEach(b=>b.classList.remove('active'));
+    document.getElementById('srv-'+d.tab).classList.add('active');
+    document.querySelectorAll('.srv-tab')[d.tabIdx].classList.add('active');
+  },700);
+}
+renderSrv();
+setInterval(()=>{si=(si+1)%srvData.length;renderSrv();},2500);
+
+// CAROUSEL
+const slides=[
+  {src:'',e:'🏥'},{src:'',e:'🔬'},{src:'',e:'🐕'},{src:'',e:'💊'},
+  {src:'',e:'🩺'},{src:'',e:'🐈'},{src:'',e:'⚕️'},{src:'',e:'👩‍⚕️'},
+];
+let ci=0;
+function renderCar(){
+  const n=slides.length,prev=(ci-1+n)%n,next=(ci+1)%n;
+  const mk=(s,cls)=>`<div class="car-item ${cls}">${s.src?`<img src="${s.src}" alt="">`:s.e}</div>`;
+  document.getElementById('carTrack').innerHTML=mk(slides[prev],'cl')+mk(slides[ci],'cc')+mk(slides[next],'cr');
+  document.getElementById('carDots').innerHTML=slides.map((_,i)=>`<div class="cdot${i===ci?' act':''}" onclick="carJump(${i})"></div>`).join('');
+}
+function carMove(d){ci=(ci+d+slides.length)%slides.length;renderCar();}
+function carJump(i){ci=i;renderCar();}
+renderCar();
+setInterval(()=>carMove(1),2800);
+
+// SERVICE PANEL SLIDESHOW (hirurg, interna, stoma)
+const ssPanels={hirurg:{cur:0,n:3},interna:{cur:0,n:3},stoma:{cur:0,n:3}};
+function ssDot(id,i){
+  const ss=ssPanels[id],el=document.getElementById('ss-'+id);
+  el.querySelectorAll('.ss-s')[ss.cur].classList.remove('sact');
+  el.querySelectorAll('.ss-d')[ss.cur].classList.remove('sact');
+  ss.cur=i;
+  el.querySelectorAll('.ss-s')[ss.cur].classList.add('sact');
+  el.querySelectorAll('.ss-d')[ss.cur].classList.add('sact');
+}
+setInterval(()=>{
+  Object.keys(ssPanels).forEach(id=>{
+    const ss=ssPanels[id],el=document.getElementById('ss-'+id);
+    if(!el)return;
+    el.querySelectorAll('.ss-s')[ss.cur].classList.remove('sact');
+    el.querySelectorAll('.ss-d')[ss.cur].classList.remove('sact');
+    ss.cur=(ss.cur+1)%ss.n;
+    el.querySelectorAll('.ss-s')[ss.cur].classList.add('sact');
+    el.querySelectorAll('.ss-d')[ss.cur].classList.add('sact');
+  });
+},3000);
+
+// SERVICES
+function showSrv(id,btn){
+  document.querySelectorAll('.srv-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.srv-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('srv-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// SUB-CARD TAP (mobile)
+function tapCard(el){
+  if(window.innerWidth>900)return;
+  const was=el.classList.contains('tapped');
+  document.querySelectorAll('.sub-card.tapped').forEach(c=>c.classList.remove('tapped'));
+  if(!was)el.classList.add('tapped');
+}
+
+// TEAM TAP
+function tapTeam(el){
+  if(window.innerWidth>900)return;
+  const was=el.classList.contains('tapped');
+  document.querySelectorAll('.tc.tapped').forEach(c=>c.classList.remove('tapped'));
+  if(!was)el.classList.add('tapped');
+}
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')});
+},{threshold:0.08});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
+
+// CALENDAR REFRESH
+setInterval(()=>{const f=document.getElementById('gcal-iframe');if(f){const s=f.src.split('&_t=')[0];f.src=s+'&_t='+Date.now();}},600000);
+
+// DATE/TIME
+const fdEl=document.getElementById('fd');
+fdEl.min=new Date().toISOString().split('T')[0];
+fdEl.addEventListener('change',ucitajSlobodneTermine);
+
+// Slobodni termini zavise i od datuma i od izabranog veterinara (svaki lekar ima svoje termine i radne dane)
+async function ucitajSlobodneTermine(){
+  const datum=document.getElementById('fd').value,vetId=document.getElementById('fvet').value;
+  const msg=document.getElementById('ft-msg');
+  populateSlots([]);
+  if(!datum||!vetId){msg.style.display='none';return;}
+  if(new Date(datum).getUTCDay()===0){
+    document.getElementById('fd').value='';
+    msg.style.cssText='display:block;color:var(--p)';msg.textContent='⚠ Nedeljom ne radimo. Izaberite drugi dan.';return;
+  }
+  try{
+    const res=await fetch('/api/appointments/slobodni-termini?datum='+datum+'&veterinarId='+vetId);
+    const slotovi=(await res.json()).map(t=>t.substring(0,5)); // npr. "11:00:00" -> "11:00"
+    populateSlots(slotovi);
+    if(slotovi.length){msg.style.display='none';}
+    else{msg.style.cssText='display:block;color:var(--p)';msg.textContent='⚠ Izabrani veterinar tog dana ne radi ili nema slobodnih termina. Izaberite drugi dan ili veterinara.';}
+  }catch(err){msg.style.cssText='display:block;color:var(--p)';msg.textContent='⚠ Ne možemo da učitamo termine. Pokušajte ponovo.';}
+}
+function populateSlots(vremena){
+  const sel=document.getElementById('ft');
+  sel.innerHTML='<option value="">Izaberite vreme...</option>';
+  vremena.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o);});
+}
+function validateTime(){
+  const msg=document.getElementById('ft-msg'),val=document.getElementById('ft').value;
+  if(!val){msg.style.display='none';return;}
+  msg.style.cssText='display:block;color:#2a7a4f';
+  msg.textContent='✓ Termin je slobodan.';
+}
+
+// FORM
+async function submitF(){
+  const v=id=>document.getElementById(id).value.trim();
+  if(!v('fn')||!v('fp')||!v('fe')||!v('fpt')||!v('fvet')||!v('fsv')||!v('fd')||!v('ft')){alert('Molimo popunite sva obavezna polja (*).');return;}
+  const btn=document.getElementById('fsub-btn');
+  btn.textContent='Šalje se...';btn.disabled=true;
+  try{
+    const res=await fetch('/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ime:v('fn'),telefon:v('fp'),email:v('fe'),ljubimac:v('fpt'),vrsta:document.getElementById('fsp').value,usluga:document.getElementById('fsv').value,veterinarId:Number(v('fvet')),datum:v('fd'),vreme:document.getElementById('ft').value,napomena:v('fno')})});
+    if(!res.ok){
+      const err=await res.json();
+      const poruka=err.greska||Object.values(err)[0]||'Nešto nije u redu, proverite podatke.';
+      alert(poruka);btn.textContent='Pošalji zahtev za termin →';btn.disabled=false;ucitajSlobodneTermine();return;
+    }
+    document.getElementById('bf').style.display='none';
+    document.getElementById('sb').style.display='block';
+  }catch(err){alert('Greška u komunikaciji sa serverom. Pokušajte ponovo.');btn.textContent='Pošalji zahtev za termin →';btn.disabled=false;}
+}
+function resetF(){
+  document.getElementById('bf').style.display='block';document.getElementById('sb').style.display='none';
+  ['fn','fp','fe','fpt','fno','fd'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fsp').selectedIndex=0;document.getElementById('fvet').selectedIndex=0;
+  populateUsluge(null);populateSlots([]);document.getElementById('ft-msg').style.display='none';
+  const btn=document.getElementById('fsub-btn');btn.textContent='Pošalji zahtev za termin →';btn.disabled=false;
+}
+
+// LEKARI - jedan poziv ka /api/doctors puni i sekciju Tim i formu za zakazivanje
+let SVI_LEKARI=[];
+let KATEGORIJA_USLUGE={}; // id usluge -> naziv kategorije (iz /api/services), za grupisanje u formi
+const DANI_IMENA={PON:'Pon',UTO:'Uto',SRE:'Sre',CET:'Čet',PET:'Pet',SUB:'Sub',NED:'Ned'};
+
+async function loadDoctors(){
+  try{
+    const [lekariRes,uslugeRes]=await Promise.all([fetch('/api/doctors'),fetch('/api/services')]);
+    SVI_LEKARI=await lekariRes.json();
+    (await uslugeRes.json()).forEach(k=>k.usluge.forEach(u=>{KATEGORIJA_USLUGE[u.id]=k.naziv;}));
+  }catch(err){SVI_LEKARI=[];}
+  renderTeam();
+  populateVeterinari();
+}
+
+function renderTeam(){
+  const grid=document.getElementById('team-grid');
+  if(!SVI_LEKARI.length){
+    grid.innerHTML='<p style="color:var(--muted)">Trenutno ne možemo da učitamo tim. Pokušajte kasnije.</p>';
+    return;
+  }
+  grid.innerHTML='';
+  SVI_LEKARI.forEach((d,i)=>{
+    const specijalnosti=(d.specijalnost||'').split(',').map(x=>x.trim()).filter(Boolean);
+    const badges=specijalnosti.map(x=>`<span class="tco-badge">${x}</span>`).join('')
+      +`<span class="tco-badge">${d.godinaIskustva}+ god.</span>`;
+    const card=document.createElement('div');
+    card.className='tc '+(i%2===0?'reveal-l':'reveal-r')+' d2';
+    card.setAttribute('onclick','tapTeam(this)');
+    card.innerHTML=`
+      <div class="tp">🩺<img src="" alt="${d.imePrezime}" onerror="this.style.display='none'"/>
+        <div class="tc-overlay"><div class="tco-role">${d.uloga}</div><div class="tco-name">${d.imePrezime}</div><div class="tco-bio">${d.bio||''}</div><div class="tco-badges">${badges}</div></div>
+      </div>
+      <div class="ti2"><div class="ti2l"><div class="tr">${d.uloga}</div><div class="tn">${d.imePrezime}</div></div><div class="tbadge">${specijalnosti[0]||''}</div></div>`;
+    grid.appendChild(card);
+    obs.observe(card); // isti scroll-reveal efekat kao i za ostatak stranice
+  });
+}
+
+// FORMA - lista veterinara (sa danima kad rade), usluge se filtriraju po izabranom veterinaru
+function populateVeterinari(){
+  const sel=document.getElementById('fvet');
+  if(!SVI_LEKARI.length){sel.innerHTML='<option value="">Veterinari trenutno nisu dostupni</option>';return;}
+  sel.innerHTML='<option value="">Izaberite veterinara...</option>';
+  SVI_LEKARI.forEach(d=>{
+    const dani=(d.radniDani||'').split(',').map(x=>DANI_IMENA[x.trim()]||x.trim()).join(', ');
+    const o=document.createElement('option');
+    o.value=d.id;o.textContent=d.imePrezime+' ('+dani+')';
+    sel.appendChild(o);
+  });
+}
+
+function populateUsluge(lekar){
+  const sel=document.getElementById('fsv');
+  document.getElementById('fsv-opis').textContent='';
+  if(!lekar){sel.innerHTML='<option value="">Prvo izaberite veterinara...</option>';return;}
+  sel.innerHTML='<option value="">Izaberite uslugu...</option>';
+  // usluge izabranog veterinara, grupisane po kategoriji (optgroup)
+  const grupe={};
+  lekar.usluge.forEach(u=>{const k=KATEGORIJA_USLUGE[u.id]||'Ostalo';(grupe[k]=grupe[k]||[]).push(u);});
+  Object.entries(grupe).forEach(([kategorija,usluge])=>{
+    const og=document.createElement('optgroup');og.label=kategorija;
+    usluge.forEach(u=>{
+      const o=document.createElement('option');
+      o.value=u.naziv;o.textContent=(u.ikona?u.ikona+' ':'')+u.naziv;
+      if(u.detaljanOpis)o.title=u.detaljanOpis; // detaljan opis kao tooltip
+      og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+}
+
+// kratak opis izabrane usluge ispod polja
+function prikaziOpisUsluge(){
+  const lekar=SVI_LEKARI.find(d=>String(d.id)===document.getElementById('fvet').value);
+  const usluga=lekar&&lekar.usluge.find(u=>u.naziv===document.getElementById('fsv').value);
+  document.getElementById('fsv-opis').textContent=usluga&&usluga.opis?usluga.opis:'';
+}
+
+function onVeterinarChange(){
+  const lekar=SVI_LEKARI.find(d=>String(d.id)===document.getElementById('fvet').value);
+  populateUsluge(lekar);
+  ucitajSlobodneTermine();
+}
+loadDoctors();
+</script>
+</body>
+</html>
