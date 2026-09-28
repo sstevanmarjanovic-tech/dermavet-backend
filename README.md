@@ -29,7 +29,7 @@ klijent bira veterinara, a ponuđene usluge i termini zavise od izabranog veteri
 
 ## Tech Stack
 
-Java 17, Spring Boot 3 (Web, Data JPA, Validation, Security, Mail), PostgreSQL / H2,
+Java 21, Spring Boot 3 (Web, Data JPA, Validation, Security, Mail), PostgreSQL / H2,
 springdoc-openapi, JUnit 5, Mockito, Docker, Docker Compose, GitHub Actions
 
 ## Architecture
@@ -110,17 +110,15 @@ kad je aplikacija pokrenuta: **http://localhost:8080/swagger-ui.html**
 
 ## Authentication
 
-Admin endpoint-i (`GET/PATCH/DELETE /api/appointments`) su zaštićeni Spring Security-jem
-uz HTTP Basic prijavu. Kredencijali dolaze isključivo iz environment varijabli
-(`ADMIN_USERNAME`, `ADMIN_PASSWORD`) i hešuju se BCrypt-om - nigde u kodu nema
-hardkodovane lozinke.
+Admin endpoint-i (`GET/PATCH/DELETE /api/appointments`) su zaštićeni Spring Security-jem uz HTTP Basic prijavu.
+
+Kredencijali se u produkcionom okruženju prosleđuju putem environment varijabli (`ADMIN_USERNAME`, `ADMIN_PASSWORD`), dok razvojni profil (`dev`) ima podrazumevane lokalne vrednosti za lakše pokretanje projekta. Lozinka se hešuje BCrypt-om - nigde u kodu nema hardkodovane produkcione lozinke.
 
 ```bash
 curl -u <ADMIN_USERNAME>:<ADMIN_PASSWORD> http://localhost:8080/api/appointments
 ```
 
-Sesije se ne koriste (`STATELESS`), pa je CSRF zaštita namerno isključena - CSRF napad
-zavisi od kolačića koje browser šalje automatski, a ovde ih nema.
+Sesije se ne koriste (`STATELESS`), pa je CSRF zaštita namerno isključena - CSRF napad zavisi od kolačića koje browser šalje automatski, a ovde ih nema.
 
 ## Database
 
