@@ -1,5 +1,9 @@
 # DermaVet Backend
 
+### DermaVet Backend
+
+![CI](https://github.com/sstevanmarjanovic-tech/dermavet-backend/actions/workflows/ci.yml/badge.svg)
+
 Spring Boot backend za sajt veterinarske ambulante DermaVet - zamenjuje ranije rešenje
 preko Make.com webhook-a pravim REST API-jem sa bazom, autentifikacijom, testovima i
 API dokumentacijom.
@@ -7,17 +11,30 @@ API dokumentacijom.
 ## Overview
 
 Ovaj servis prima zahteve za termine sa postojećeg sajta (statični `index.html`, poslužen
-kroz isti Spring Boot server), čuva ih u bazi, i tek posle toga ih prosleđuje dalje u
-Google kalendar (preko Make.com) i šalje mejlove. Ima i admin deo (zaštićen prijavom) za
+kroz isti Spring Boot server), čuva ih u bazi, i tek nakon uspešnog upisa u bazu sinhronizuje ih sa Google Calendar-om preko Make.com integracije i šalje mejlove. Ima i admin deo (zaštićen prijavom) za
 pregled, izmenu i brisanje termina, kao i javni katalog usluga i tima lekara. Pri zakazivanju
 klijent bira veterinara, a ponuđene usluge i termini zavise od izabranog veterinara.
+
+## Screenshots
+
+### Tim veterinara 
+
+![Tim veterinara](screenshots/team.png)
+
+### Forma za zakazivanje termina
+
+![Forma za zakazivanje termina](screenshots/booking-form.png)
+
+### Swagger API
+
+![Swagger API](screenshots/swagger.png)
 
 ## Features
 
 - Zakazivanje termina sa izborom veterinara, validacijom radnog vremena i sprečavanjem duplog zakazivanja
 - Svaki veterinar ima svoj raspored (radni dani) i listu usluga koje obavlja - forma nudi samo te usluge
 - Endpoint za stvarno slobodne termine po datumu i veterinaru (zauzetost se računa po veterinaru)
-- Prosleđivanje zakazanog termina u Google kalendar (Make.com webhook), sa bojom po veterinaru
+- Sinhronizacija zakazanih termina sa Google Calendar-om preko Make.com webhook-a
 - Automatski mejl vlasniku ambulante (novi zahtev) i klijentu (potvrda)
 - Admin endpoint-i za pregled/izmenu/brisanje termina, zaštićeni HTTP Basic prijavom
 - Tim lekara (sekcija "Tim" i forma) i katalog usluga po kategorijama, učitani iz baze
@@ -82,31 +99,23 @@ zakazivanje ako padnu):
 Sekcija "Usluge" na samom sajtu je namerno ostala statična (potpun prikaz svega što ambulanta
 nudi); baza čuva isti katalog da bi ga forma mogla koristiti.
 
-### Google Calendar - boja termina po veterinaru
 
-Backend uz svaki termin šalje Make.com webhook-u i polja `veterinar` (ime) i `colorId`
-(Google Calendar boja 1-11, čuva se u `Doctor.googleCalendarBoja`; u seed podacima 5 = žuta,
-9 = plava). Sama boja se podešava u Make.com scenariju (van ovog repozitorijuma):
+### Google Calendar integracija
 
-- u modulu Google Calendar -> Create an Event potražiti polje za boju (Color) i mapirati `colorId`, ili
-- ako polje prihvata samo izbor iz liste: ispred modula dodati Router sa filterom po polju
-  `veterinar` i po jedan Google Calendar modul za svakog veterinara sa fiksno izabranom bojom.
+Nakon uspešnog upisa termina u bazu, backend prosleđuje podatke Make.com webhook-u, koji kreira događaj u Google Calendar-u. Uz termin se šalju i podaci o veterinaru i njegovoj dodeljenoj boji, kako bi se termini različitih veterinara mogli vizuelno razlikovati u kalendaru.
 
 ## API
 
 Puna dokumentacija (parametri, primeri, mogući error kodovi) dostupna je kroz Swagger UI
-kad je aplikacija pokrenuta: **http://localhost:8080/swagger-ui.html**
+kad je aplikacija pokrenuta: **http://localhost:8080/swagger-ui/index.html**
 (raw OpenAPI JSON: `/v3/api-docs`).
 
-| Metoda | Putanja | Zaštita | Opis |
-|---|---|---|---|
-| POST | `/api/appointments` | javno | Zakazuje termin (telo sadrži `veterinarId`) |
-| GET | `/api/appointments/slobodni-termini?datum=2026-09-25&veterinarId=1` | javno | Slobodni termini za datum i veterinara |
-| GET | `/api/appointments` | admin | Svi termini |
-| PATCH | `/api/appointments/{id}/status?status=POTVRDJEN` | admin | Promena statusa termina |
-| DELETE | `/api/appointments/{id}` | admin | Brisanje termina |
-| GET | `/api/doctors` | javno | Lista lekara, sa radnim danima i uslugama koje obavljaju |
-| GET | `/api/services` | javno | Katalog usluga po kategorijama |
+| Metoda | Putanja                         | Zaštita | Status | Opis             |
+| ------ | ------------------------------- | ------- | ------ | ---------------- |
+| POST   | `/api/appointments`             | javno   | 201    | Zakazuje termin  |
+| GET    | `/api/appointments`             | admin   | 200    | Svi termini      |
+| PATCH  | `/api/appointments/{id}/status` | admin   | 200    | Promena statusa  |
+| DELETE | `/api/appointments/{id}`        | admin   | 204    | Brisanje termina |
 
 ## Authentication
 
@@ -135,7 +144,7 @@ dva lekara. Radni dani lekara i veza lekar - usluge su **ilustrativni primer pod
 
 Napomena: `Appointment` sada ima obavezno polje `veterinar_id`. Ako je PostgreSQL volume nastao
 pre ove izmene i već sadrži termine, Hibernate ne može da doda kolonu - reset lokalne baze:
-`docker-compose down -v`.
+`docker compose down -v`.
 
 ## Running locally
 
@@ -151,7 +160,7 @@ Za mejlove i admin login treba podesiti environment varijable - videti sekciju
 
 ```bash
 cp .env.example .env   # popuniti sopstvenim vrednostima
-docker-compose up --build
+docker compose up --build
 ```
 
 Podiže PostgreSQL bazu i backend zajedno; sajt i API dostupni na `http://localhost:8080`.
